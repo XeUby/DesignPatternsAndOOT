@@ -1,3 +1,11 @@
+//My key points of the Solution:
+//The Logger class is made sealed to prevent inheritance.
+//The constructor of the Logger class is made private, ensuring that it cannot be instantiated from outside the class. This enforces the Singleton pattern.
+//The GetInstance method provides a way to get the single instance of the Logger class. If the instance doesn't exist, it creates one; otherwise, it returns the existing instance.
+//The Log method is a public method that logs messages to the console. I can customize this method to write messages to a file or perform other logging actions.
+//In the Main method, I use the Logger class by calling GetInstance to get an instance and then log a message. 
+//I also demonstrate that the same instance is returned when GetInstance is called multiple times, ensuring that only one instance exists throughout the program.
+
 using System;
 
 public sealed class Logger
