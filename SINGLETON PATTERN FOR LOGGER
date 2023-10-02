@@ -1,1 +1,59 @@
+using System;
+using System.IO;
+
+public sealed class Logger
+{
+    private static Logger _instance;
+    private static readonly object _lock = new object();
+
+    private Logger()
+    {
+        // Private constructor to prevent external instantiation
+        LogFile = "log.txt"; // You can customize the log file name here
+    }
+
+    public string LogFile { get; }
+
+    public static Logger Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                lock (_lock)
+                {
+                    if (_instance == null)
+                    {
+                        _instance = new Logger();
+                    }
+                }
+            }
+            return _instance;
+        }
+    }
+
+    public void Log(string message)
+    {
+        using (StreamWriter writer = new StreamWriter(LogFile, true))
+        {
+            writer.WriteLine($"{DateTime.Now}: {message}");
+        }
+        Console.WriteLine(message);
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        Logger logger1 = Logger.Instance;
+        logger1.Log("This is a log message from logger1");
+
+        Logger logger2 = Logger.Instance;
+        logger2.Log("This is another log message from logger2");
+
+        // Both logger1 and logger2 refer to the same instance of the Logger class
+        Console.ReadLine();
+    }
+}
 
