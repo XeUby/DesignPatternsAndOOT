@@ -1,44 +1,29 @@
 using System;
-using System.IO;
 
 public sealed class Logger
 {
+    // Step 1: Private static instance variable to hold the single instance
     private static Logger _instance;
-    private static readonly object _lock = new object();
 
+    // Step 2: Private constructor to prevent external instantiation
     private Logger()
     {
-        // Private constructor to prevent external instantiation
-        LogFile = "log.txt"; // You can customize the log file name here
     }
 
-    public string LogFile { get; }
-
-    public static Logger Instance
+    // Step 3: Public static method to get the single instance
+    public static Logger GetInstance()
     {
-        get
+        if (_instance == null)
         {
-            if (_instance == null)
-            {
-                lock (_lock)
-                {
-                    if (_instance == null)
-                    {
-                        _instance = new Logger();
-                    }
-                }
-            }
-            return _instance;
+            _instance = new Logger();
         }
+        return _instance;
     }
 
+    // Public method to log messages
     public void Log(string message)
     {
-        using (StreamWriter writer = new StreamWriter(LogFile, true))
-        {
-            writer.WriteLine($"{DateTime.Now}: {message}");
-        }
-        Console.WriteLine(message);
+        Console.WriteLine($"[Log]: {message}");
     }
 }
 
@@ -46,14 +31,13 @@ class Program
 {
     static void Main(string[] args)
     {
-        Logger logger1 = Logger.Instance;
-        logger1.Log("This is a log message from logger1");
+        // Step 4: Using the Logger in the Main method
+        Logger logger = Logger.GetInstance();
+        logger.Log("This is a log message from the Logger.");
 
-        Logger logger2 = Logger.Instance;
-        logger2.Log("This is another log message from logger2");
-
-        // Both logger1 and logger2 refer to the same instance of the Logger class
-        Console.ReadLine();
+        // Step 5: Demonstrate that the same instance is returned
+        Logger anotherLogger = Logger.GetInstance();
+        Console.WriteLine($"Are logger and anotherLogger the same instance? {ReferenceEquals(logger, anotherLogger)}");
     }
 }
 
